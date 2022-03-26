@@ -1,0 +1,12 @@
+# development environment
+venv/*
+
+# cache
+*/__pycache__/*
+
+# start development environment
+
+
+# binary data
+*.csv
+*.png

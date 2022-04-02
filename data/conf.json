@@ -1,0 +1,13 @@
+{
+    "CHANNEL_SECRET": 
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "CHANNEL_ACCESS_TOKEN": 
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "GROUP_MAIN_ID": 
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "GROUP_TEST_ID": 
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "ADMIN_USERs": 
+    ["xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"]
+}

@@ -10,3 +10,6 @@ venv/*
 # binary data
 *.csv
 *.png
+
+# log data
+app.log

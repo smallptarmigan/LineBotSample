@@ -23,7 +23,7 @@ app = Flask(__name__)
 # Read setting file
 # Save the TOKEN and ID in config file 
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
-with open(ABS_PATH+'/conf.json', 'r') as f:
+with open(ABS_PATH+'/data/lineconf.json', 'r') as f:
     CONF_DATA = json.load(f)
 
 CHANNEL_ACCESS_TOKEN = CONF_DATA['CHANNEL_ACCESS_TOKEN']
@@ -71,64 +71,48 @@ def handle_message(event):
     randnum  = random.randint(0, 100)
 
     if True:
-        # debag
+        # Define debag code
         if get_text == "test":
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="get test message!"))
         elif get_text == "reply":
             line_bot_api.push_message(GROUP_TEST_ID, TextSendMessage(text='test push message!'))
 
-        # test
-        if get_text == "testimage":
-            # image27 = linebot.models.ImageSendMessage(original_content_url="https://dsmpt.info/image/27.jpg")
-            # line_bot_api.reply_message(event.reply_token, image27)
-            pass
-        if get_text == "testcode":
-            test_text = package.testcode.test(get_text)
-            line_bot_api.push_message(GROUP_TEST_ID, TextSendMessage(text=test_text))
-
-        # help
-        out_text = help.explanation(get_text)
-        if out_text != None:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=out_text))
+        # Define help code
+        package.help.explanation(get_text)
+        # if out_text != None:
+        #     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=out_text))
 
         # Tool
-        out_text = None
-        if get_text in ["時間", "117", "時刻", "time"]:
-            dt_now = datetime.datetime.now()
-            out_text = dt_now.strftime('%m月%d日%H:%M:%Sです')
-        if get_text in ["天気", "177", "weather", "今日の天気", "明日の天気"]:
-            out_text = package.weather.get_weatherreport()
         if get_text in ["次勤務"]:
             out_text = package.send_nextwork.make_send_text(package.send_nextwork.search_next_work(package.send_nextwork.read_work()))
         # reply
         if out_text != None:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=out_text))
 
-        # train time
-        out_text = package.train.traintime(get_text)
-        # reply
-        if out_text != None:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=out_text))
-
+# 
+# 
 # @handler.add(MessageEvent, message=ImageMessage)
 # def handle_image(event):
 #     line_bot_api.reply_message(
 #         event.reply_token,
 #         TextSendMessage(text="Image"))
 
-# sticker event
+# Define sticker event
+# 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker(event):
     if True:
         dt_now = datetime.datetime.now()
         # line_bot_api.reply_message(event.reply_token, TextSendMessage(text=dt_now.strftime('%Y %m %d %H:%M:%S')))
 
+# Define main function
 if __name__ == "__main__":
-    # Set port 8002(8001)
+    # Set port default 8002(8001)
     port = int(os.getenv("PORT", 8002))
-    # Flaskはデフォルトだと実行しても外部公開されないので、runの引数にIPとポートを指定する
-    app.run(host="0.0.0.0", port=port)
 
+    # Flask is not exposed to the outside
+    # Specify IP and port as arguments of run
+    app.run(host="0.0.0.0", port=port)
 
     # [error] Send stop message (nonexecutable program)
     # Executed when line bot program does not start successfully for some reason or other.

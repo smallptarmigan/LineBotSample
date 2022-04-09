@@ -16,7 +16,7 @@ from logging import getLogger, config
 # Import myfile 
 # Divide the file for each reply function
 # To improve the readability of the program
-import package.testcode
+import package.work
 
 app = Flask(__name__)
 
@@ -36,6 +36,8 @@ USER_ID = CONF_DATA['ADMIN_USERs']
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
+
+
 
 # Setting log file
 config.fileConfig('logging.conf')
@@ -85,6 +87,7 @@ def handle_message(event):
         # Tool
         if get_text in ["次勤務"]:
             out_text = package.send_nextwork.make_send_text(package.send_nextwork.search_next_work(package.send_nextwork.read_work()))
+        
         # reply
         if out_text != None:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=out_text))

@@ -13,13 +13,13 @@ $ pip install -r requirements.txt
 仮想環境を利用する場合（venv環境構築）
 
 ```sh
-> python -m venv (venv_name)
+> python -m venv (environment_name)
 > Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process # for windows
-> .\(venv_name)\Scripts\Activate.ps1
-(venv_name)> pip install --upgrade pip # need admin
-(venv_name)> pip install -r requirements.txt
-(venv_name)> python3 ***.py # run program
-(venv_name)> deactivate
+> .\(environment_name)\Scripts\Activate.ps1
+(environment_name)> pip install --upgrade pip # need admin (skip)
+(environment_name)> pip install -r requirements.txt
+(environment_name)> python3 ***.py # run program
+(environment_name)> deactivate
 ```
 ## ファイル詳細
 
@@ -39,5 +39,11 @@ data/ : データディレクトリ
 
  * testcode.py
    テスト用のコード
+
+## 参考
+
+1. [PythonでGoogle Sheetsを編集する方法](https://www.twilio.com/blog/an-easy-way-to-read-and-write-to-a-google-spreadsheet-in-python-jp)
+
+
 
    

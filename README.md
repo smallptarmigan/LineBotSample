@@ -30,8 +30,11 @@ receive.py : メインプログラム
 
 data/ : データディレクトリ
 
- * conf.json
-   TOKENやIDの設定を保存するファイル
+ * googleclient.jspm
+   google spreadsheetのための認証IDを保存するファイル
+
+ * lineconf.json
+   LineのTOKENやIDの設定を保存するファイル
 
  package/ : パッケージディレクトリ
 

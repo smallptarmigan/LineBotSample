@@ -13,3 +13,6 @@ venv/*
 
 # log data
 app.log
+
+# local file
+_*.*

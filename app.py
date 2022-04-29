@@ -6,6 +6,10 @@ from linebot import (LineBotApi, WebhookHandler)
 from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (MessageEvent, TextMessage, ImageMessage, VideoMessage, StickerMessage, TextSendMessage)
 
+# Import package For use google spreadsheet function
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
 # Import package
 import os
 import json
@@ -17,11 +21,12 @@ from logging import getLogger, config
 # Divide the file for each reply function
 # To improve the readability of the program
 import package.work
+import package.spreadsheet
 
 app = Flask(__name__)
 
 # Read setting file
-# Save the TOKEN and ID in config file 
+# Read the TOKEN and ID in config file 
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
 with open(ABS_PATH+'/data/lineconf.json', 'r') as f:
     CONF_DATA = json.load(f)
@@ -37,6 +42,13 @@ USER_ID = CONF_DATA['ADMIN_USERs']
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 
+# Read google spreadsheet config file
+# use creds to create a client to interact with the Google Drive API
+scope =['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name('../data/_googleclient.json', scope)
+client = gspread.authorize(creds)
+workschedule_sheet = client.open("work").sheet1
+# timesetting_sheet = client.open("WorkSchedult").sheet1
 
 
 # Setting log file

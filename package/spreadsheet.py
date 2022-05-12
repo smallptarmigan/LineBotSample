@@ -21,6 +21,15 @@ def search_name_sheet(sheet, name):
             break
     return name_row
 
+def search_date_sheet(sheet, dt_now):
+    date_col = -1
+    today = dt_now.strftime('%Y/%m/%d')
+    for i, col in enumerate(sheet.col_values(1)):
+        if col == today:
+            date_col = i
+            break
+    return date_col
+
 # Define main function
 # Test code
 if __name__ == "__main__":
@@ -44,9 +53,11 @@ if __name__ == "__main__":
     result_sheet = wb.get_worksheet(2)
 
     # Extract and print all of the values
-    #dt_now = datetime.datetime.now()
+    dt_now = datetime.datetime.now()
     #result_sheet.update_cell(2, 2, dt_now.strftime('%H:%M'))
     print(search_name_sheet(timesetting_sheet, "tester"))
+    print(search_today_sheet(workschedule_sheet, dt_now))
+    
     
     
 

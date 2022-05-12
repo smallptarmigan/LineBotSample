@@ -56,7 +56,7 @@ if __name__ == "__main__":
     dt_now = datetime.datetime.now()
     #result_sheet.update_cell(2, 2, dt_now.strftime('%H:%M'))
     print(search_name_sheet(timesetting_sheet, "tester"))
-    print(search_today_sheet(workschedule_sheet, dt_now))
+    print(search_date_sheet(workschedule_sheet, dt_now))
     
     
     

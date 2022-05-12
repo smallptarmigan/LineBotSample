@@ -36,6 +36,9 @@ data/ : データディレクトリ
  * lineconf.json
    LineのTOKENやIDの設定を保存するファイル
 
+ * spreadsheetkey.json
+   spreadsheetにアクセスするための認証キーを保存するファイル
+
  package/ : パッケージディレクトリ
 
  * 自作した関数などを機能ごとにファイル分けして使用

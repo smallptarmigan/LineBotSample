@@ -28,12 +28,14 @@ if __name__ == "__main__":
 
     # Read google spreadsheet config file
     # use creds to create a client to interact with the Google Drive API
+    # 'data/_googleclient.json' -> 'data/googleclient.json' (Remove underbar)
     scope =['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('data/_googleclient.json', scope)
     client = gspread.authorize(creds)
       
     # Find a workbook by name and open sheet
     # Make sure you use the right name here.
+    # 'data/_spreadsheetkey.json' -> 'data/spreadsheetkey.json' (Remove underbar)
     with open('data/_spreadsheetkey.json', 'r') as f:
         CONF_DATA = json.load(f)
     wb = client.open_by_key(CONF_DATA['SPREADSHEET_KEY'])

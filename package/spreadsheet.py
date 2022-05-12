@@ -15,8 +15,8 @@ def test_certification():
 
 def search_name_sheet(sheet, name):
     name_row = -1
-    for i in range(1, sheet.col_count):
-        if sheet.cell(1, i).value == name:
+    for i, row in enumerate(sheet.row_values(1)):
+        if row == name:
             name_row = i
             break
     return name_row

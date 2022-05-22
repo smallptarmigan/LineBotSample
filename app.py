@@ -43,12 +43,10 @@ handler = WebhookHandler(CHANNEL_SECRET)
 
 # Read google spreadsheet config file
 # use creds to create a client to interact with the Google Drive API
-scope =['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('../data/_googleclient.json', scope)
-client = gspread.authorize(creds)
-workschedule_sheet = client.open("work").sheet1
-# timesetting_sheet = client.open("WorkSchedult").sheet1
-
+wb = package.spreadsheet.authenticate_spreadsheet()
+workschedule_sheet = wb.get_worksheet(0)
+timesetting_sheet = wb.get_worksheet(1)
+result_sheet = wb.get_worksheet(2)
 
 # Setting log file
 config.fileConfig('logging.conf')
@@ -103,13 +101,13 @@ def handle_message(event):
         if out_text != None:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=out_text))
 
+# Define sticher event (main funtion)
 # 
-# 
-# @handler.add(MessageEvent, message=ImageMessage)
-# def handle_image(event):
-#     line_bot_api.reply_message(
-#         event.reply_token,
-#         TextSendMessage(text="Image"))
+@handler.add(MessageEvent, message=StickerMessage)
+def handle_image(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text="Image"))
 
 # Define sticker event
 # 
@@ -126,8 +124,8 @@ if __name__ == "__main__":
 
     # Flask is not exposed to the outside
     # Specify IP and port as arguments of run
-    app.run(host="0.0.0.0", port=port)
+    #app.run(host="0.0.0.0", port=port)
 
     # [error] Send stop message (nonexecutable program)
     # Executed when line bot program does not start successfully for some reason or other.
-    line_bot_api.push_message(GROUP_TEST_ID, TextSendMessage(text='[error] Line bot program could not start'))
+    #line_bot_api.push_message(GROUP_TEST_ID, TextSendMessage(text='[error] Line bot program could not start'))

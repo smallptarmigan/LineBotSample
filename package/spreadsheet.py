@@ -9,10 +9,6 @@ import json
 import datetime
 
 
-
-def test_certification():
-    pass
-
 def authenticate_spreadsheet():
     # Read google spreadsheet config file
     # use creds to create a client to interact with the Google Drive API
@@ -58,7 +54,7 @@ def stamp_sheet(sheet, name:str):
 # Define main function
 # Test code
 if __name__ == "__main__":
-    ABS_PATH = os.path.dirname(os.path.abspath(__file__))
+    #ABS_PATH = os.path.dirname(os.path.abspath(__file__))
 
     # Read google spreadsheet config file
     # Find a workbook by name and open sheet
@@ -71,9 +67,9 @@ if __name__ == "__main__":
     # Extract and print all of the values
     #dt_now = datetime.datetime.now()
     #result_sheet.update_cell(2, 2, dt_now.strftime('%H:%M'))
-    #print(search_name_sheet(timesetting_sheet, "金山"))
+    #print(search_name_sheet(timesetting_sheet, "test"))
     #print(search_date_sheet(workschedule_sheet, dt_now))
-    stamp_sheet(result_sheet, "金山")
+    stamp_sheet(result_sheet, "test")
     
     
 

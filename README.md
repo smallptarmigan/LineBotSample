@@ -46,6 +46,14 @@ data/ : データディレクトリ
  * testcode.py
    テスト用のコード
 
+ * spreadsheet.py
+   スプレッド用のパッケージコード
+
+timerun/ : 定時実行用コード
+
+
+
+
 ## 参考
 
 1. [PythonでGoogle Sheetsを編集する方法](https://www.twilio.com/blog/an-easy-way-to-read-and-write-to-a-google-spreadsheet-in-python-jp)

@@ -27,8 +27,7 @@ app = Flask(__name__)
 
 # Read setting file
 # Read the TOKEN and ID in config file 
-ABS_PATH = os.path.dirname(os.path.abspath(__file__))
-with open(ABS_PATH+'/data/lineconf.json', 'r') as f:
+with open('data/lineconf.json', 'r') as f:
     CONF_DATA = json.load(f)
 
 CHANNEL_ACCESS_TOKEN = CONF_DATA['CHANNEL_ACCESS_TOKEN']

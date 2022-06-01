@@ -4,14 +4,12 @@ from flask import Flask, request, abort
 from linebot import (LineBotApi, WebhookHandler)
 from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (MessageEvent, TextMessage, ImageMessage, VideoMessage, StickerMessage, TextSendMessage)
-import os
-import sys
 import csv
 import json
 import datetime
 from logging import getLogger, config
-import difflib
-import requests
+
+import package.spreadsheet as sp
 
 app = Flask(__name__)
 
@@ -33,36 +31,31 @@ logger = getLogger(__name__)
 
 # Read schedule
 def read_work():
-    workdata = []
-    with open('data/workday.csv', encoding = "utf-8-sig") as f:
-        reader = csv.reader(f)
-        for row in reader:
-            # print(row)
-            workdata.append([str(i) for i in row])
-    # line_bot_api.push_message(USER_ID[0], TextSendMessage(text=workdata))
-    # line_bot_api.push_message(USER_ID[0], TextSendMessage(text='read schedule'))
-    return workdata
+    wb = sp.authenticate_spreadsheet()
+    workschedule_sheet = wb.get_worksheet(0)
+    timesetting_sheet = wb.get_worksheet(1)
+    result_sheet = wb.get_worksheet(2)
+
+    datelist = workschedule_sheet.col_values(1)
+    workdata = workschedule_sheet.col_values(2)
+
+    return [datelist, workdata]
 
 
 def search_next_work(work_list):
     dt_now = datetime.datetime.now()
     now_date = dt_now.strftime("%Y/%m/%d")
     next_work_day = None
-    #print(now_date)
 
     dayafter = False
-    for i, d in enumerate(work_list):
+    [datelist, workdata] = work_list
+    for i, w in enumerate(workdata):
         if dayafter:
-            if d[2] == '日勤':
-                next_work_day = work_list[i]
+            if w == '日勤':
+                next_work_day = datelist[i]
                 break
-        #print(d[0], now_date)
-        if d[0] == now_date:
+        if datelist[i] == now_date:
             dayafter = True
-        #print(d[0])
-        #print(d[0] == "2021/08/10")
-        #print(d[0] - now_date)
-        #print(difflib.context_diff(d[0], now_date))
 
     return next_work_day
 
@@ -102,7 +95,7 @@ if __name__ == "__main__":
     work_list = read_work()
     next_work_day = search_next_work(work_list)
     message = make_send_text(next_work_day, s=True)
-    message = add_tsuken_message(work_list, message)
+    #message = add_tsuken_message(work_list, message)
     line_bot_api.push_message(GROUP_TEST_ID, TextSendMessage(text=message))
     #print(message)
 

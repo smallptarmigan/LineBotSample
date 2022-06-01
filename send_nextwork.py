@@ -26,9 +26,6 @@ USER_ID = CONF_DATA['ADMIN_USERs']
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CHANNEL_SECRET)
 
-config.fileConfig('data/_logging.conf')
-logger = getLogger(__name__)
-
 # Read schedule
 def read_work():
     wb = sp.authenticate_spreadsheet()
@@ -77,30 +74,27 @@ def add_tsuken_message(work_list, message=""):
 
 def make_send_text(next_work_day, s=False):
     # print(next_work_day[0][9:])
-    stamp_message = '6時15分までにメッセージかスタンプをお願いします。'
-    work_text = '次勤務は'+next_work_day[0][8:]+'日'+next_work_day[1]+'曜日'+next_work_day[3][0:1]+'時からです。'
+    work_text = '次勤務は'+str(int(next_work_day[5:7]))+'月'+str(int(next_work_day[8:]))+'日'+'9:00 開始です'
+
+    stamp_message = '6:15までにスタンプをお願いします'
+
+    mezamashi = "1.毎日の次勤務確認\n2.目覚まし時計の3点確認\n3.起床後すぐの出勤時刻確認"
+
+    print(work_text)
     if next_work_day == None:
         work_text = '次勤務が登録されていません。'
     if s:
         work_text += ('\n' + stamp_message)
+        work_text += ('\n\n' + mezamashi)
     return work_text
 
 
 if __name__ == "__main__":
-    # Send root
-    #line_bot_api.push_message(USER_ID[0], TextSendMessage(text='send next work time!'))
-    #line_bot_api.push_message(GROUP_TEST_ID, TextSendMessage(text='次勤務は2日月曜日9時からです。\n6時15分までにメッセージかスタンプをお願いします。'))
-
     # Read schedule data
     work_list = read_work()
     next_work_day = search_next_work(work_list)
     message = make_send_text(next_work_day, s=True)
     #message = add_tsuken_message(work_list, message)
-    line_bot_api.push_message(GROUP_TEST_ID, TextSendMessage(text=message))
+    print(message)
+    line_bot_api.push_message(GROUP_MAIN_ID, TextSendMessage(text=message))
     #print(message)
-
-    at_day = next_work_day[0][5:7] + next_work_day[0][8:] + next_work_day[0][0:4]
-    print(at_day)
-
-    # print(work_list)
-    # print(message)

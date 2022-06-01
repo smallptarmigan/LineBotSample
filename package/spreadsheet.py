@@ -8,7 +8,6 @@ import os
 import json
 import datetime
 
-
 def authenticate_spreadsheet():
     # Read google spreadsheet config file
     # use creds to create a client to interact with the Google Drive API

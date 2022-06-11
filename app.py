@@ -21,7 +21,7 @@ from logging import getLogger, config
 # Divide the file for each reply function
 # To improve the readability of the program
 import package.work
-import package.spreadsheet
+import package.spreadsheet as sp
 
 app = Flask(__name__)
 
@@ -103,19 +103,43 @@ def handle_message(event):
 
 # Define sticher event (main funtion)
 # 
-@handler.add(MessageEvent, message=StickerMessage)
-def handle_image(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="Image"))
+#@handler.add(MessageEvent, message=StickerMessage)
+#def handle_image(event):
+#    line_bot_api.reply_message(
+#        event.reply_token,
+#        TextSendMessage(text="Image"))
 
 # Define sticker event
 # 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker(event):
-    if True:
-        dt_now = datetime.datetime.now()
-        # line_bot_api.reply_message(event.reply_token, TextSendMessage(text=dt_now.strftime('%Y %m %d %H:%M:%S')))
+    dt_now = datetime.datetime.now()
+
+    # spreadsheet setting
+    wb = sp.authenticate_spreadsheet()
+    workschedule_sheet = wb.get_worksheet(0)
+    timesetting_sheet = wb.get_worksheet(1)
+    result_sheet = wb.get_worksheet(2)
+
+    profile = line_bot_api.get_profile(event.source.user_id)
+
+    # user init
+    if sp.search_id_sheet(timesetting_sheet, profile.user_id) == 0:
+        timesetting_sheet.update_cell(1, len(timesetting_sheet.row_values(1))+1, profile.display_name)
+        timesetting_sheet.update_cell(2, len(timesetting_sheet.row_values(2))+1, profile.user_id)
+        result_sheet.update_cell(1, len(result_sheet.row_values(1))+1, profile.display_name)
+        workschedule_sheet.update_cell(1, len(workschedule_sheet.row_values(1))+1, profile.display_name)
+
+    sheet_date = sp.search_date_sheet(result_sheet, dt_now)
+    sheet_id = sp.search_id_sheet(timesetting_sheet, profile.user_id)
+
+    # debag
+    #output = str(sheet_date) + '-' + str(sheet_id)
+    #test_profile = line_bot_api.get_profile(event.source)
+    #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(profile.type)))
+
+    # save time
+    result_sheet.update_cell(sheet_date, sheet_id, dt_now.strftime('%H:%M'))
 
 # Define main function
 if __name__ == "__main__":

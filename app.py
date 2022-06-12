@@ -127,7 +127,7 @@ def handle_sticker(event):
     if sp.search_id_sheet(timesetting_sheet, profile.user_id) == 0:
         timesetting_sheet.update_cell(1, len(timesetting_sheet.row_values(1))+1, profile.display_name)
         timesetting_sheet.update_cell(2, len(timesetting_sheet.row_values(2))+1, profile.user_id)
-        timesetting_sheet.update_cell(23, len(timesetting_sheet.row_values(2))+1, 0)
+        timesetting_sheet.update_cell(23, len(timesetting_sheet.row_values(23))+1, 0)
         result_sheet.update_cell(1, len(result_sheet.row_values(1))+1, profile.display_name)
         workschedule_sheet.update_cell(1, len(workschedule_sheet.row_values(1))+1, profile.display_name)
 
@@ -140,7 +140,12 @@ def handle_sticker(event):
     #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(profile.type)))
 
     # save time
-    result_sheet.update_cell(sheet_date, sheet_id, dt_now.strftime('%H:%M'))
+    limit_data = timesetting_sheet.row_values(6)
+    limit_time = datetime.datetime.strptime(limit_data[sheet_id], '%H:%M')
+    limit_time = limit_time.replace(year=dt_now.year, month=dt_now.month, day=dt_now.day)
+    #print(limit_time, dt_now)
+    if limit_time - datetime.timedelta(hours=3) < dt_now:
+        result_sheet.update_cell(sheet_date, sheet_id, dt_now.strftime('%H:%M'))
 
 # Define main function
 if __name__ == "__main__":

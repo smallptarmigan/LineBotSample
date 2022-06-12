@@ -59,38 +59,48 @@ if __name__ == "__main__":
         else:
             user_work = work_data[1]
 
-        if user_work == "日勤":
+        if user_work == "公休":
+        #if user_work == "日勤":
             # Confirmation of wake-up time registration
             if len(limit_data) < i+1:
-                print("[error:101] no wake-up time registration")
+                print("[error:101] no wake-up time registration " + user_names[i])
                 continue
             elif limit_data[i] == "":
-                print("[error:102] no wake-up time registration")
+                print("[error:102] no wake-up time registration " + user_names[i])
                 continue
             timelimit = limit_data[i]
 
             # Check the time
+            # Overtime and nostamp
             worning_flag = False
-            if len(result_data) < i+1:
-                worning_flag = True
-            elif result_data[i] == "":
-                worning_flag = True
-            
-            # Warning message
+            timelimit = datetime.datetime.strptime(timelimit, '%H:%M')
+            timelimit = timelimit.replace(year=dt_now.year, month=dt_now.month, day=dt_now.day)
+            #dt_now = dt_now + datetime.timedelta(hours=3)
+            #print(timelimit, dt_now)
+            if timelimit < dt_now:
+                if len(result_data) < i+1:
+                    worning_flag = True
+                elif result_data[i] == "":
+                    worning_flag = True
+            else:
+                #print("[error:103] off time " + user_names[i])
+                continue
+
+            # Warning message (for grope) 
             if worning_flag and count_data[i] < 3:
                 count_data[i] = int(count_data[i]) + 1
                 timesetting_sheet.update_cell(23, i+1, count_data[i])
                 outputmessage1 = "!!!警告メッセージ!!!\n" + user_names[i] + "の起床が確認できません\n" + "早急に連絡してください"
-                print(outputmessage1)
-                #line_bot_api.push_message(group_ids[i], TextSendMessage(text=outputmessage1))
+                #print(outputmessage1)
+                line_bot_api.push_message(group_ids[i], TextSendMessage(text=outputmessage1))
             else:
                 timesetting_sheet.update_cell(23, i+1, 0)
 
             # Report to administrator
             if count_data[i] == 3:
                 outputmessage2 = "!!!警告メッセージ!!!\n" + user_names[i] + "15分以上の遅延が発生しています\n" + "管理者への報告を行います"
-                print(outputmessage2)
-                #line_bot_api.push_message(group_ids[i], TextSendMessage(text=outputmessage2))
+                #print(outputmessage2)
+                line_bot_api.push_message(group_ids[i], TextSendMessage(text=outputmessage2))
 
         # debag prog
         #print(i, user_names[i], user_work)

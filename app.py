@@ -127,6 +127,7 @@ def handle_sticker(event):
     if sp.search_id_sheet(timesetting_sheet, profile.user_id) == 0:
         timesetting_sheet.update_cell(1, len(timesetting_sheet.row_values(1))+1, profile.display_name)
         timesetting_sheet.update_cell(2, len(timesetting_sheet.row_values(2))+1, profile.user_id)
+        timesetting_sheet.update_cell(23, len(timesetting_sheet.row_values(2))+1, 0)
         result_sheet.update_cell(1, len(result_sheet.row_values(1))+1, profile.display_name)
         workschedule_sheet.update_cell(1, len(workschedule_sheet.row_values(1))+1, profile.display_name)
 

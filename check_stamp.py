@@ -2,6 +2,7 @@
 
 from __future__ import barry_as_FLUFL
 from operator import truediv
+from tokenize import group
 from flask import Flask, request, abort
 from linebot import (LineBotApi, WebhookHandler)
 from linebot.exceptions import (InvalidSignatureError)
@@ -40,6 +41,7 @@ if __name__ == "__main__":
     # data extraction
     user_names = timesetting_sheet.row_values(1)
     user_ids = timesetting_sheet.row_values(2)
+    group_ids = timesetting_sheet.row_values(3)
     work_data = workschedule_sheet.row_values(sp.search_date_sheet(workschedule_sheet, dt_now))
     limit_data = timesetting_sheet.row_values(6)
     result_data = result_sheet.row_values(sp.search_date_sheet(result_sheet, dt_now))
@@ -57,7 +59,7 @@ if __name__ == "__main__":
         else:
             user_work = work_data[1]
 
-        if user_work == "公休":
+        if user_work == "日勤":
             # Confirmation of wake-up time registration
             if len(limit_data) < i+1:
                 print("[error:101] no wake-up time registration")
@@ -73,23 +75,26 @@ if __name__ == "__main__":
                 worning_flag = True
             elif result_data[i] == "":
                 worning_flag = True
-            if worning_flag:
+            
+            # Warning message
+            if worning_flag and count_data[i] < 3:
                 count_data[i] = int(count_data[i]) + 1
                 timesetting_sheet.update_cell(23, i+1, count_data[i])
-                print("警告LINE", str(count_data[i]))
-                #line_bot_api.push_message(user_ids[i], TextSendMessage(text='警告メッセージ'))
+                outputmessage1 = "!!!警告メッセージ!!!\n" + user_names[i] + "の起床が確認できません\n" + "早急に連絡してください"
+                print(outputmessage1)
+                #line_bot_api.push_message(group_ids[i], TextSendMessage(text=outputmessage1))
             else:
                 timesetting_sheet.update_cell(23, i+1, 0)
 
             # Report to administrator
-
-
-        #line_bot_api.push_message(user_ids[i], TextSendMessage(text='警告メッセージ'))
-
+            if count_data[i] == 3:
+                outputmessage2 = "!!!警告メッセージ!!!\n" + user_names[i] + "15分以上の遅延が発生しています\n" + "管理者への報告を行います"
+                print(outputmessage2)
+                #line_bot_api.push_message(group_ids[i], TextSendMessage(text=outputmessage2))
 
         # debag prog
-        print(i, user_names[i], user_work)
+        #print(i, user_names[i], user_work)
         # if i == 1:
         #     break
 
-        
+    

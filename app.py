@@ -97,9 +97,43 @@ def handle_message(event):
         if get_text in ["次勤務"]:
             out_text = package.send_nextwork.make_send_text(package.send_nextwork.search_next_work(package.send_nextwork.read_work()))
         
-        # reply
-        if out_text != None:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=out_text))
+        # set group
+        if get_text in ["起床グループ"]:
+            profile = line_bot_api.get_profile(event.source.user_id)
+
+            wb = sp.authenticate_spreadsheet()
+            timesetting_sheet = wb.get_worksheet(1)
+            sheet_id = sp.search_id_sheet(timesetting_sheet, profile.user_id)
+
+            if hasattr(event.source,"group_id"):
+                timesetting_sheet.update_cell(3, sheet_id, event.source.group_id)
+            if hasattr(event.source,"room_id"):
+                timesetting_sheet.update_cell(3, sheet_id, event.source.room_id)
+
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="起床グループを設定しました。"))
+
+        # set time
+        if "出勤時刻" in get_text[:4]:
+            profile = line_bot_api.get_profile(event.source.user_id)
+
+            wb = sp.authenticate_spreadsheet()
+            timesetting_sheet = wb.get_worksheet(1)
+            sheet_id = sp.search_id_sheet(timesetting_sheet, profile.user_id)
+
+            settime = get_text[4:]
+
+            #debag
+            #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=len(settime)))
+            #limit_time = datetime.datetime.strptimEde(get_text[4:], '%H:%M')
+            #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(limit_time)))      
+            #limit_time = datetime.datetime.strptimEde(get_text, '%H:%M')
+
+            timesetting_sheet.update_cell(6, sheet_id, settime)
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="時刻を設定しました。"))
+
+        # run test
+        if out_text == "runtest":
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="正常動いています"))
 
 # Define sticher event (main funtion)
 # 
@@ -140,12 +174,7 @@ def handle_sticker(event):
     #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(profile.type)))
 
     # save time
-    limit_data = timesetting_sheet.row_values(6)
-    limit_time = datetime.datetime.strptime(limit_data[sheet_id], '%H:%M')
-    limit_time = limit_time.replace(year=dt_now.year, month=dt_now.month, day=dt_now.day)
-    #print(limit_time, dt_now)
-    if limit_time - datetime.timedelta(hours=3) < dt_now:
-        result_sheet.update_cell(sheet_date, sheet_id, dt_now.strftime('%H:%M'))
+    result_sheet.update_cell(sheet_date, sheet_id, dt_now.strftime('%H:%M'))
 
 # Define main function
 if __name__ == "__main__":
@@ -154,7 +183,7 @@ if __name__ == "__main__":
 
     # Flask is not exposed to the outside
     # Specify IP and port as arguments of run
-    #app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port)
 
     # [error] Send stop message (nonexecutable program)
     # Executed when line bot program does not start successfully for some reason or other.

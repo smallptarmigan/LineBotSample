@@ -59,8 +59,7 @@ if __name__ == "__main__":
         else:
             user_work = work_data[1]
 
-        if user_work == "公休":
-        #if user_work == "日勤":
+        if user_work == "日勤":
             # Confirmation of wake-up time registration
             if len(limit_data) < i+1:
                 print("[error:101] no wake-up time registration " + user_names[i])
